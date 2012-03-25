@@ -8,6 +8,8 @@
 </head>
 <body>
 
+<div class="signed">Приветствую, <%= current_user ? current_user.name : "гость"  %> <%= link_to("Выйти", signout_path) if current_user %></div>
+
 <%= yield %>
 
 </body>

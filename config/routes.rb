@@ -1,5 +1,13 @@
 AllRightAction::Application.routes.draw do
+  get "identities/new"
+
   get "home/index"
+  
+  resources 'sessions'
+  resources 'identities'
+  
+  match "/auth/:provider/callback" => "sessions#create"
+  match 'signout', :to => 'sessions#destroy'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,17 @@
+h1 Регистрация
+p
+ = form_tag '/auth/identity/register' do
+  - if @identity && @identity.errors.any?
+   ul
+    - @identity.errors.full_messages.each do |msg|
+     li= msg
+  p
+   = label_tag :name, "Ник"
+   = text_field_tag :name, @identity.try(:name)
+  p
+   = label_tag :password, "Пароль"
+   = password_field_tag :password
+  p
+   = label_tag :password_confirmation, "Подтвердите пароль"
+   = password_field_tag :password_confirmation
+  p= submit_tag "Регистрация"

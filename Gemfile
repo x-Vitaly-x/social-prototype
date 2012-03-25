@@ -8,13 +8,15 @@ gem 'rails', '3.2.2'
 gem 'mysql2'
 gem "pg"
 
+gem 'slim'
+
 
 # authentication
 gem 'omniauth-identity'
 gem 'omniauth-vkontakte'
 
 
-group :development, :tests do
+group :development, :test do
   gem 'cucumber-rails'
   gem 'rspec-rails'
   gem 'factory_girl_rails'

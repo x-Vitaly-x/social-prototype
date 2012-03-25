@@ -1,0 +1,12 @@
+h1 Signin/signup
+p= link_to "Регистрация через Вконтакте", "/auth/vkontakte"
+p= link_to "Анонимная регистрация", new_identity_path
+
+= form_tag('/auth/identity/callback') do
+  p
+   = label_tag :auth_key, "Ник"
+   = text_field_tag :auth_key
+  p
+   = label_tag :password, "Пароль"
+   = password_field_tag :password
+  p= submit_tag "Вход"

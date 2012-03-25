@@ -1,5 +1,5 @@
 # coding: utf-8;
 
-То /^пользователь с именем "([^"]*)" и фамилией "([^"]*)", ником "([^"]*)" и аккаунтом "([^"]*)" должен быть создан$/ do |arg1, arg2, arg3, arg4|
-  pending # express the regexp above with the code you wish you had
+То /^пользователь с именем "([^"]*)" и аккаунтом "([^"]*)" должен быть создан$/ do |name, provider|
+  User.find_by_name(name).provider.should == provider
 end

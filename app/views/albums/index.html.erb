@@ -1,0 +1,17 @@
+<!--div class="tcenter grayField ral">
+  <h2 class="borderBottom">Upload New Image</h2>
+  <div id="progress_bar" class="ui-progress-bar ui-container">
+    <div style="width: 5%;" class="ui-progress">
+      <span style="display:none;" class="ui-label">
+        Uploading
+      </span>
+    </div>
+  </div>
+  <a id="pickfiles" href="#" class="medium silver button ram">Select image</a>
+</div-->
+<script type="text/javascript">
+    window.history.replaceState({type : "albums", id:<%= @user_id %>}, "", "/albums");
+    $(document).one("ajaxStop", function(){
+        Photo.Albums.get(<%= @user_id %>);
+    });
+</script>

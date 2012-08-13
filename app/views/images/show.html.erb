@@ -1,0 +1,5 @@
+<script type="text/javascript">
+    window.history.replaceState({type:"image", id: <%= @id %>}, "", "/images/" + <%= @id %>);
+    // get and render only one album
+    Photo.Image.get(<%= @id %>);
+</script>

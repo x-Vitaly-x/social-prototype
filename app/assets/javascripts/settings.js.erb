@@ -1,0 +1,26 @@
+$(document).ready(function () {
+    $("#settings_toggler").live("click", function () {
+        window.history.pushState({type:"settings"}, "", "/settings");
+        Settings.get();
+    });
+
+});
+Settings = {
+    get:function () {
+        $.ajax({
+            type:"GET",
+            url:"/users/" + Main.user.id,
+            success:function (msg) {
+                Main.user_tmp = new user(msg.user);
+                Settings.render();
+            },
+            error:function (request, status, error) {
+                x_alert(request.responseText);
+            }
+        });
+    },
+    render:function () {
+        $(".container").empty();
+        $("#settings_template").tmpl({user:Main.user_tmp}).appendTo(".container");
+    }
+}

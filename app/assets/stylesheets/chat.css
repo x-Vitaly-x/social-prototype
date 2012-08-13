@@ -1,0 +1,254 @@
+/*+clearfix {*/
+#chat:after, #messages:after, #messages #lines:after, .nicknames_toggler:after, #messages .chat_message:after
+{
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	font-size: 0;
+}
+#chat, #messages, #messages #lines, .nicknames_toggler, #messages .chat_message
+{
+	display: inline-block;
+}
+#chat, #messages, #messages #lines, .nicknames_toggler, #messages .chat_message
+{
+/*\*/
+	display: block;
+/**/
+	-height: 1px;
+}
+/*+}*/
+/*[clearfix]*/#chat
+{
+	position: relative;
+	height: 100%;
+	overflow: auto;
+}
+.nicknames_list .nickname
+{
+	padding: 5%;
+}
+.nicknames_list
+{
+	width: 100%;
+	overflow: auto;
+}
+#nickname, #connecting
+{
+	position: absolute;
+	height: 100%;
+	z-index: 100;
+	left: 0;
+	top: 0px;
+	background: #FFF;
+	text-align: center;
+	width: 100%;
+	font: 15px Georgia;
+	color: #666;
+	display: block;
+}
+#nickname .wrap, #connecting .wrap
+{
+	padding-top: 20%;
+}
+#nickname INPUT
+{
+	border: 1px solid #CCC;
+	padding: 10px;
+}
+#nickname INPUT:focus
+{
+	border-color: #999;
+	outline: 0;
+}
+#nickname #nickname-err
+{
+	color: #8B0000;
+	font-size: 12px;
+	visibility: hidden;
+}
+.connected #connecting
+{
+	display: none;
+}
+.nickname-set #nickname
+{
+	display: none;
+}
+/*[clearfix]*/#messages
+{
+	background: #EEE;
+	height: 100%;
+}
+#messages #send_message
+{
+	padding: 5%;
+}
+#send_message BUTTON
+{
+	width: 30%;
+	border: 1px solid #217B23;
+	background-color: #42DD44;
+	font-weight: bold;
+	border-radius: 5px;
+	opacity: 0.7;
+	font-size: 73%;
+	cursor: pointer;
+}
+#send_message INPUT
+{
+	width: 65%;
+}
+#messages .chat_message .content
+{
+	font: 12px Helvetica, Arial;
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	text-align: justify;
+	padding: 10px;
+	width: 60%;
+	margin-left: 5%;
+/*CSS3 Box Shadow*/
+	-moz-box-shadow: 2px 2px 4px #444;
+	-webkit-box-shadow: 2px 2px 4px #444;
+	-o-box-shadow: 2px 2px 4px #444;
+	box-shadow: 2px 2px 4px #444;
+}
+#messages .chat_message .avatar
+{
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	height: 40px;
+	width: 24%;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+/*CSS3 Box Shadow*/
+	-moz-box-shadow: 2px 2px 4px #444;
+	-webkit-box-shadow: 2px 2px 4px #444;
+	-o-box-shadow: 2px 2px 4px #444;
+	box-shadow: 2px 2px 4px #444;
+}
+#messages P:nth-child(even)
+{
+	background: #FAFAFA;
+}
+#messages #nicknames
+{
+	background: #CCC;
+	padding: 2px 4px 4px;
+	font: 11px Helvetica;
+	height: 4%;
+}
+#messages #nicknames SPAN
+{
+	color: #000;
+}
+#messages #nicknames B
+{
+	display: inline-block;
+	color: #FFF;
+	background: #999;
+	padding: 3px 6px;
+	margin-right: 5px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	text-shadow: 0 1px 0 #666;
+}
+/*[clearfix]*/#messages #lines
+{
+	overflow: auto;
+	height: 86%;
+}
+#messages .glass IMG
+{
+	margin-top: 50%;
+}
+#messages #lines::-webkit-scrollbar
+{
+	width: 6px;
+	height: 6px;
+}
+#messages #lines::-webkit-scrollbar-button:start:decrement, #messages #lines ::-webkit-scrollbar-button:end:increment
+{
+	display: block;
+	height: 10px;
+}
+#messages #lines::-webkit-scrollbar-button:vertical:increment
+{
+	background-color: #FFF;
+}
+#messages #lines::-webkit-scrollbar-track-piece
+{
+	background-color: #FFF;
+	-webkit-border-radius: 3px;
+}
+#messages #lines::-webkit-scrollbar-thumb:vertical
+{
+	height: 50px;
+	background-color: #CCC;
+	-webkit-border-radius: 3px;
+}
+#messages #lines::-webkit-scrollbar-thumb:horizontal
+{
+	width: 50px;
+	background-color: #FFF;
+	-webkit-border-radius: 3px;
+}
+#send-message
+{
+	background: #FFF;
+	position: relative;
+	height: 7%;
+}
+#send-message INPUT
+{
+	border: none;
+	height: 30px;
+	padding: 0 10px;
+	line-height: 30px;
+	vertical-align: middle;
+	width: 80%;
+}
+#send-message INPUT:focus
+{
+	outline: 0;
+}
+.nicknames
+{
+	/*+placement:shift 0px 0px;*/
+	position: relative;
+	left: 0px;
+	top: 0px;
+	right: 0;
+	/*[disabled]display:none;*/
+	width: 100%;
+	border-color: #000000;
+	height: 5%;
+}
+/*[clearfix]*/.nicknames_toggler
+{
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	background-color: #BEBBBB;
+}
+#send_message BUTTON:hover
+{
+	opacity: 1;
+}
+/*[clearfix]*/#messages .chat_message
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 1%;
+}

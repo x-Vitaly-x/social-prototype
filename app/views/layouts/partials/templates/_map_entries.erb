@@ -1,0 +1,47 @@
+<script id="map_entries_index_template" type="text/x-jquery-tmpl">
+  <div class="map_container">
+    <a class="menu_toggler" title="menu"></a>
+
+    <div class="menu">
+      <% if current_user %>
+          <a class="button" id="new_map_entry" title="create new event on the map">New event</a>
+      <% end %>
+    </div>
+    <div id="map_canvas" class="map_canvas">
+    </div>
+  </div>
+  <div class="event_list_container">
+  </div>
+  <div class="event_container">
+  </div>
+</script>
+
+<script id="new_map_entry_form_template" type="text/x-jquery-tmpl">
+  <div id="map_entry_form_container" class="basic_form_container">
+    <div class="close" onclick="Map.Entry.Form.hide();">
+    </div>
+    <div class="glass">
+    </div>
+    <form id="map_entry_form" onsubmit="Map.Entry.post();return false" class="basic_form">
+      <input type="text" size="30" name="map_entry[title]" id="map_entry_title" title="Title" value="${title}">
+      <textarea rows="20" name="map_entry[description]" id="map_entry_description" title="Description">{{html
+        description}}</textarea>
+      <input type="hidden" id="lat" value="${position.lat}" name="map_entry[lat]">
+      <input type="hidden" id="lng" value="${position.lng}" name="map_entry[lng]">
+
+      <div class="validation-error"></div>
+      <input type="submit" value="Create Map entry" name="commit" class="submit">
+    </form>
+  </div>
+</script>
+
+<script id="map_list_entry_template" type="text/x-jquery-tmpl">
+  <div class="map_entry" entry-id="${id}">
+    <div class="title">
+      ${title}
+    </div>
+    <div class="description">
+      {{html description_short}}
+    </div>
+  </div>
+</script>

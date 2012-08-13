@@ -1,0 +1,8 @@
+development:
+  dropbox_key: stanchit@uni-potsdam.de
+  dropbox_secret: vitaly88
+  path: "/:attachment/:attachment/:id/:style/:filename"
+production:
+  dropbox_key: stanchit@uni-potsdam.de
+  dropbox_secret: vitaly88
+  path: "/:attachment/:attachment/:id/:style/:filename"

@@ -1,13 +1,309 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
- * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the top of the
- * compiled file, but it's generally better to create a new file per style scope.
- *
- *= require_self
- *= require_tree .
+/**/
+/*+clearfix {*/
+.header .top_menu LI:after, .central_panel .logo:after, .body:after, .alert_window:after, .header:after, .header .top_menu:after
+{
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	font-size: 0;
+}
+.header .top_menu LI, .central_panel .logo, .body, .alert_window, .header, .header .top_menu
+{
+	display: inline-block;
+}
+.header .top_menu LI, .central_panel .logo, .body, .alert_window, .header, .header .top_menu
+{
+/*\*/
+	display: block;
+/**/
+	-height: 1px;
+}
+/*+}*/
+/*[clearfix]*/.header .top_menu LI
+{
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	background-color: #9FA3C5;
+	text-align: center;
+	width: 9%;
+	font-size: 70%;
+	font-weight: bold;
+	font-family: Helvetica;
+	height: 80%;
+	color: #000000;
+	top: 10%;
+	margin-left: 0.1%;
+	opacity: 0.8;
+	overflow: hidden;
+}
+BODY
+{
+	width: 100%;
+	height: 100%;
+	margin-left: 0;
+	margin-right: 0;
+}
+HTML
+{
+	padding: 0px;
+	margin: 0px;
+	height: 100%;
+	width: 100%;
+}
+.body .right_panel
+{
+	width: 20%;
+	height: 100%;
+	position: absolute;
+	margin-left: 80%;
+}
+.body .central_panel
+{
+	width: 61%;
+	height: 100%;
+	overflow-y: visible;
+	overflow-x: hidden;
+	position: absolute;
+	margin-left: 18%;
+}
+.logo .menu .top_menu A
+{
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	border: 1px solid #000000;
+	background-color: #70BA70;
+	font-family: Constantia;
+	padding: 0.5%;
+	margin: 1%;
+	width: 16%;
+	font-size: 71%;
+	z-index: 1;
+	cursor: pointer;
+}
+.logo .menu
+{
+	position: relative;
+	/*+placement:anchor-top-left 0px 0px;*/
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(50, 100, 50, 0.4);
+	border-radius: 0 0 10px 10px;
+	display: none;
+}
+/*[clearfix]*/.central_panel .logo
+{
+	height: 20%;
+	position: absolute;
+	/*+placement:shift 0px 0px;*/
+	position: relative;
+	left: 0px;
+	top: 0px;
+}
+.central_panel .container
+{
+}
+/*[clearfix]*/.body
+{
+	width: 100%;
+	height: 100%;
+	/*+placement:shift 0px 0px;*/
+	position: relative;
+	left: 0px;
+	top: 0px;
+}
+/*[clearfix]*/.alert_window
+{
+	border: 1px solid #F3CCA6;
+	position: absolute;
+	z-index: 2;
+	width: 50%;
+	height: 30%;
+	margin-left: 21%;
+	margin-top: 20%;
+	padding: 3%;
+	background: rgba(244, 233, 80, 0.5);
+	border-radius: 10px;
+	text-align: justify;
+	font-family: Calibri;
+	display: none;
+	z-index: 3;
+}
+.body .left_panel
+{
+	height: 100%;
+	width: 18%;
+	position: absolute;
+	overflow: auto;
+	/*[empty]richness:;*/
+}
+.collapse_toggler
+{
+	width: 0.5%;
+	position: fixed;
+	z-index: 1;
+	margin-top: 20%;
+	background-color: #4BF45A;
+	height: 80px;
+}
+/*[clearfix]*/.header
+{
+	position: absolute;
+	height: 8%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	background: rgb(94, 94, 94);
+/*Old browsers*/
+	background: -moz-linear-gradient(top, rgba(94,94,94,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(41,15,63,1) 100%);
+/*FF3.6+*/
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(94,94,94,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(41,15,63,1)));
+/*Chrome,Safari4+*/
+	background: -webkit-linear-gradient(top, rgba(94,94,94,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(41,15,63,1) 100%);
+/*Chrome10+,Safari5.1+*/
+	background: -o-linear-gradient(top, rgba(94,94,94,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(41,15,63,1) 100%);
+/*Opera 11.10+*/
+	background: -ms-linear-gradient(top, rgba(94,94,94,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(41,15,63,1) 100%);
+/*IE10+*/
+	background: linear-gradient(top, rgba(94,94,94,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(41,15,63,1) 100%);
+/*W3C*/
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e5e5e', endColorstr='#290f3f',GradientType=0 );
+/*IE6-9*/
+	z-index: 1488;
+}
+/*[clearfix]*/.header .top_menu
+{
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	top: 0;
+	left: 0;
+}
+/** This is a manifest file that'll be compiled into application.css, which will include all the files
+* listed below.
+*
+* Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+* or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+*
+* You're free to add application-wide styles to this file and they'll appear at the top of the
+* compiled file, but it's generally better to create a new file per style scope.
+*
 */
+.header .top_menu LI:hover
+{
+	opacity: 1;
+}
+.top_menu LI SPAN
+{
+	/*+placement:margin-auto 0 25%;*/
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	left: 0;
+	top: 25%;
+}
+.header .top_menu A:first-child LI
+{
+	margin-left: 1%;
+	border-radius: 10px 0 0 10px;
+}
+.header .top_menu A:last-child LI
+{
+	border-radius: 0 10px 10px 0;
+}
+.alert_window .close
+{
+	border: 1px solid #AF0000;
+	/*+placement:anchor-top-right 0px 0px;*/
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 15px;
+	height: 15px;
+	margin-top: 10px;
+	margin-right: 10px;
+	border-radius: 10px;
+	background-color: #F2323F;
+	cursor: pointer;
+}
+.logo .menu_toggler
+{
+	height: 40px;
+	z-index: 2;
+	background-image: url("/assets/gear_icon.png");
+	cursor: pointer;
+	position: absolute;
+	/*+placement:anchor-bottom-right 0px 0px;*/
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 40px;
+	background-color: #788C78;
+	border-radius: 10px;
+	opacity: 0.7;
+}
+.logo .menu_toggler:hover
+{
+	opacity: 1;
+}
+.logo .menu_toggler.selected
+{
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+.collapse_toggler:hover
+{
+	background-color: #F8CD41;
+	cursor: pointer;
+}
+.collapse_toggler.left
+{
+	margin-left: 18%;
+	border-radius: 0 5px 5px 0;
+}
+.collapse_toggler.right
+{
+	margin-left: 79.5%;
+	border-radius: 5px 0 0 5px;
+}
+.left_panel .glass
+{
+	position: fixed;
+	background-color: #D9D5D5;
+	opacity: 0.7;
+	width: 18%;
+	height: 100%;
+	z-index: 100;
+	text-align: center;
+	background-image: url(/assets/ajax-loader.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.right_panel .glass
+{
+	position: fixed;
+	background-color: #D9D5D5;
+	opacity: 0.7;
+	width: 20%;
+	height: 100%;
+	z-index: 100;
+	text-align: center;
+	background-image: url(/assets/ajax-loader.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+}

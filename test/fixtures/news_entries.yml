@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: news_entries
+#
+#  id          :integer          not null, primary key
+#  title       :string(255)
+#  description :text
+#  user_id     :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  approved    :boolean
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  title: MyString
+  description: MyText
+  user_id: 1
+
+two:
+  title: MyString
+  description: MyText
+  user_id: 1

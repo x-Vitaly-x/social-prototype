@@ -1,0 +1,579 @@
+$(document).ready(function () {
+    $("#albums_toggler").live("click", function () {
+        window.history.pushState({type:"albums", id:Main.user.attributes.id}, "", "/albums");
+        Photo.Albums.get(Main.user.attributes.id);
+    });
+
+    $("#new_album").live("click", function () {
+        Photo.Albums.Form.show();
+    });
+
+    $(".albums_container .album_link").live("click", function () {
+        window.history.pushState({type:"album", id:$(this).attr("album-id")}, "", "/albums/" + $(this).attr("album-id"))
+        Main.album_tmp = Main.user_tmp.AlbumList.get($(this).attr("album-id"));
+        Photo.Album.render();
+    });
+
+    $(".image_form_toggler").live("click", function () {
+        Photo.Album.Form.show();
+    });
+
+    $(".photos_container .photo_thumb, .all_photo_list .photo_thumb").live("click", function () {
+        if (window.history.state.type == "user") {
+            // user selects an avatar
+            User.set_avatar($(this).attr("image-id"));
+        } else {
+            // user clicks on an image
+            window.history.pushState({type:"image", id:$(this).attr("image-id")}, "", "/images/" + $(this).attr("image-id"))
+            Photo.Image.get(parseInt($(this).attr("image-id")));
+        }
+    });
+    $(".photo .list .photo_thumb").live("click", function () {
+        // user clicks on an image
+        window.history.pushState({type:"image", id:$(this).attr("image-id")}, "", "/images/" + $(this).attr("image-id"))
+        Photo.Image.get(parseInt($(this).attr("image-id")));
+    });
+    var image_update_fired = false;
+    $(".central_panel").scroll(function () {
+        //console.log(window.history.state);
+        if (window.history.state.type == "albums") {
+            // we are in the right place
+            h = scrollBottom($(".central_panel"));
+            //console.log(h);
+            if (h < 20) {
+                //get new entries
+                if (!image_update_fired) {
+                    // user id is stored in browser history
+                    Photo.Images.get_next(window.history.state.id);
+                    image_update_fired = true;
+                }
+            } else {
+                image_update_fired = false;
+            }
+        }
+    });
+});
+Photo = {
+    init_dragging:function () {
+        dragItems = document.querySelectorAll('[draggable=true]');
+
+        $.each(dragItems, function (index, value) {
+            // makes the drag shadow into the image of the element
+            addEvent(value, 'dragstart', function (event) {
+                //console.log($(this).attr("album-id"));
+                event.dataTransfer.setData('obj_id', $(this).attr("position"));
+                if ($(this).attr("image-id") != null) {
+                    event.dataTransfer.setData('obj_type', "image");
+                } else if ($(this).attr("album-id") != null) {
+                    event.dataTransfer.setData('obj_type', "album");
+                }
+                return false;
+            });
+
+            // Tells the browser that we *can* drop on this target
+            function cancel(e) {
+                if (e.preventDefault) e.preventDefault(); // required by FF + Safari
+                e.dataTransfer.dropEffect = 'copy'; // tells the browser what drop effect is allowed here
+                return false; // required by IE
+            }
+
+            ;
+            addEvent(value, 'dragover', cancel);
+            addEvent(value, 'dragenter', cancel);
+
+            addEvent(value, 'drop', function (event) {
+                if (event.preventDefault) event.preventDefault();
+
+                if ($(this).attr("image-id") != null) {
+                    typex = "image";
+                } else if ($(this).attr("album-id") != null) {
+                    typex = "album";
+                }
+                // alert(event.dataTransfer.getData('obj_type') == typex);
+                // get dropped object
+                if (event.dataTransfer.getData('obj_type') == typex) {
+                    var oldA = parseInt(event.dataTransfer.getData('obj_id'));
+                    var newA = parseInt($(this).attr("position"));
+                    // insert
+                    Photo.swtch(oldA, newA, typex);
+                }
+                return false;
+            });
+        });
+
+    },
+    swtch:function (before, after, typex) {
+        if (window.history.state.type == "album") {
+            el1 = Main.album_tmp.PhotoList.where({position:before})[0];
+            el2 = Main.album_tmp.PhotoList.where({position:after})[0];
+            el1.set({position:after});
+            el2.set({position:before});
+            // persist the data
+            $.ajax({
+                type:"PUT",
+                url:"/switch_images",
+                data:{before:before, after:after},
+                error:function (request, status, error) {
+                    x_alert(request.responseText);
+                }
+            });
+            Main.album_tmp.PhotoList.sort();
+            Photo.Album.render();
+        } else if (window.history.state.type == "albums") {
+            // can be either image or album
+            if (typex == "album") {
+                el1 = Main.user_tmp.AlbumList.where({position:before})[0];
+                el2 = Main.user_tmp.AlbumList.where({position:after})[0];
+                el1.set({position:after});
+                el2.set({position:before});
+                // persist the data
+                $.ajax({
+                    type:"PUT",
+                    url:"/switch_albums",
+                    data:{before:before, after:after},
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                    }
+                });
+                Main.user_tmp.AlbumList.sort();
+                Photo.Albums.render(Main.user_tmp.AlbumList);
+                Photo.Images.render();
+            } else if (typex == "image") {
+                el1 = Main.user_tmp.PhotoList.where({position:before})[0];
+                el2 = Main.user_tmp.PhotoList.where({position:after})[0];
+                el1.set({position:after});
+                el2.set({position:before});
+                // persist the data
+                $.ajax({
+                    type:"PUT",
+                    url:"/switch_images",
+                    data:{before:before, after:after},
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                    }
+                });
+                Main.user_tmp.PhotoList.sort();
+                Photo.Images.render();
+            }
+        } else if (window.history.state.type == "user") {
+            el1 = Main.user_tmp.avatar_album.PhotoList.where({position:before})[0];
+            el2 = Main.user_tmp.avatar_album.PhotoList.where({position:after})[0];
+            el1.set({position:after});
+            el2.set({position:before});
+            // persist the data
+            $.ajax({
+                type:"PUT",
+                url:"/switch_images",
+                data:{before:before, after:after},
+                error:function (request, status, error) {
+                    x_alert(request.responseText);
+                }
+            });
+            Main.user_tmp.avatar_album.PhotoList.sort();
+            // empty photos container
+            $(".photos_container").empty();
+            $.each(Main.user_tmp.avatar_album.PhotoList.models, function (index, value) {
+                $("#image_thumb_template").tmpl({value:value}).appendTo(".photos_container");
+            });
+            Photo.init_dragging();
+        }
+    },
+    Albums:{
+        get:function (id) {
+            $.ajax({
+                type:"get",
+                url:"/albums",
+                data:{"user":id},
+                success:function (msg) {
+                    Main.user_tmp.attributes.id = id;
+                    Main.user_tmp.AlbumList = new AlbumList(msg.albums);
+                    Photo.Albums.render(Main.user_tmp.AlbumList);
+                    // now get the images and append them to the wall
+                    Photo.Images.finished = false;
+                    Photo.Images.offset = 0;
+                    Photo.Images.get_next(id);
+                },
+                error:function (request, status, error) {
+                    x_alert(request.responseText);
+                }
+            });
+        },
+        render:function (albums) {
+            //list albums
+            $(".container").empty();
+            console.log(albums);
+            $("#albums_template").tmpl({albums:albums}).appendTo(".container");
+            if (Main.user.attributes.id != Main.user_tmp.attributes.id) {
+                $("#new_album").remove();
+            }
+            Photo.Albums.Form.init();
+        },
+        post:function () {
+            tinyMCE.activeEditor.save();
+            Photo.Albums.Form.Spinner.show();
+            $.ajax({
+                type:"POST",
+                url:"/albums",
+                data:$("#album_form").serialize(),
+                error:function (request, status, error) {
+                    x_alert(request.responseText);
+                    Photo.Albums.Form.Spinner.hide();
+                    //tinyMCE.activeEditor.setContent("");
+                },
+                success:function (msg) {
+                    Photo.Albums.Form.Spinner.hide();
+                    Photo.Albums.Form.hide();
+                    alb = new albumx(msg.album);
+                    Main.user_tmp.AlbumList.add(alb);
+                    Photo.Albums.render(Main.user_tmp.AlbumList);
+                }
+            });
+        },
+        Form:{
+            Spinner:{
+                show:function () {
+                    $("#album_form_container .glass").show();
+                },
+                hide:function () {
+                    $("#album_form_container .glass").hide();
+                }
+            },
+            init:function (data) {
+                $("#album_form_container").remove();
+                $("#album_form_template").tmpl(data).appendTo(".container");
+                editor_init("album_description");
+                $("#album_form_container").draggable();
+            },
+            show:function () {
+                $("#album_form_container").show();
+            },
+            hide:function () {
+                $("#album_form_container").hide();
+            }
+        }
+    },
+    Album:{
+        get:function (id) {
+            // nuke the flash object
+            $(".plupload").remove();
+            // get and render any album
+            $.ajax({
+                type:"get",
+                url:"/albums/" + id,
+                success:function (msg) {
+                    Main.album_tmp = new albumx(msg.album);
+                    Photo.Album.render();
+                },
+                error:function (request, status, error) {
+                    x_alert(request.responseText);
+                }
+            });
+        },
+        render:function () {
+            //display album
+            album = Main.album_tmp;
+            $(".container").empty();
+            $("#album_template").tmpl({album:album}).appendTo(".container");
+            if (Main.user.attributes.id != album.attributes.user_id) {
+                $("#new_album").remove();
+            } else {
+                Photo.Album.Form.init(album.attributes.id);
+                Photo.init_dragging();
+            }
+
+        },
+        Form:{
+            access_key_id:"",
+            policy:"",
+            signature:"",
+            bucket:"",
+            album_id:"",
+            post:function (file) {
+                //console.log(file);
+                $.ajax({
+                    type:"post",
+                    url:"/images",
+                    data:"image[s3_id]=" + file.id + "&image[image_file_size]=" + file.size + "&image[image_file_name]=" + file.name + "&image[album_id]=" + Photo.Album.Form.album_id,
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                        Photo.Albums.Form.Spinner.hide();
+                        //tinyMCE.activeEditor.setContent("");
+                    },
+                    success:function (msg) {
+                        i = new imagex(msg.image);
+                        if (window.history.state.type == "album") {
+                            Main.album_tmp.PhotoList.add(i);
+                        } else if (window.history.state.type == "user") {
+                            Main.user_tmp.avatar_album.PhotoList.add(i);
+                        }
+                        $("#" + msg.image.s3_id).replaceWith($("#image_thumb_template").tmpl({value:i}));
+                        Photo.init_dragging();
+                    }
+                });
+            },
+            init:function (album_id) {
+                Photo.Album.Form.album_id = album_id;
+                $.ajax({
+                    type:"get",
+                    url:"/aws_policy",
+                    data:{album_id:Photo.Album.Form.album_id},
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                        Photo.Albums.Form.Spinner.hide();
+                        //tinyMCE.activeEditor.setContent("");
+                    },
+                    success:function (msg) {
+                        // set aws credentials
+                        Photo.Album.Form.access_key_id = msg.access_key_id;
+                        Photo.Album.Form.policy = msg.policy;
+                        Photo.Album.Form.signature = msg.signature;
+                        Photo.Album.Form.bucket = msg.bucket;
+                        Photo.Plupload.config.key = "albums/" + Photo.Album.Form.album_id;
+                        // initialize plupload
+                        Photo.Plupload.init();
+                    }
+                });
+            },
+            show:function () {
+                $("#image_form_container").show();
+            }
+        }
+    },
+    Plupload:{
+        self:null,
+        config:{
+            key:'error',
+            acl:'public-read',
+            content_type:'image/',
+            filter_title:'Images',
+            filter_extentions:'jpg,jpeg,gif,png,bmp',
+            select_button:"pickfiles",
+            status:"original"
+        },
+        init:function (config) {
+            /*
+             * S3 Uploader instance
+             */
+            // image uploader via plupload
+            config = $.extend(Photo.Plupload.config, config);
+            params = {
+                runtimes:'flash,silverlight',
+                browse_button:config.select_button,
+                max_file_size:config.max_file_size,
+                url:'http://' + Photo.Album.Form.bucket + '.s3.amazonaws.com/',
+                flash_swf_url:'/assets/plupload/js/plupload.flash.swf',
+                silverlight_xap_url:'/assets/plupload/js/plupload.silverlight.xap',
+                init:{
+                    FilesAdded:function (up, files) {
+                        $.each(files, function (index, value) {
+                            console.log(value);
+                            $(".album .photos_container").append('<div id="' + value.id + '" class="photo_thumb loader" style="background-image:url(/assets/ajax-loader.gif)"><div class="percent"></div></div>');
+                        });
+                    },
+                    FilesRemoved:function (up, files) {
+                        /*if (up.files.length < 1) {
+                         $('#' + config.select_button).fadeIn('slow');
+                         }*/
+                    }
+                },
+                multi_selection:true,
+                multipart:true,
+                multipart_params:{
+                    'key':config.key + '/${filename}',
+                    'Filename':'${filename}', // adding this to keep consistency across the runtimes
+                    'acl':config.acl,
+                    'Content-Type':config.content_type,
+                    'success_action_status':'201',
+                    'AWSAccessKeyId':Photo.Album.Form.access_key_id,
+                    'policy':Photo.Album.Form.policy,
+                    'signature':Photo.Album.Form.signature
+                },
+                filters:[
+                    {
+                        title:config.filter_title,
+                        extensions:config.filter_extentions
+                    }
+                ],
+                file_data_name:'file'
+            };
+
+            var uploader = new plupload.Uploader(params);
+            // instantiates the uploader
+            uploader.init();
+            // shows the progress bar and kicks off uploading
+            uploader.bind('FilesAdded', function (up, files) {
+                config.status = "original";
+                uploader.start();
+            });
+
+            uploader.bind('UploadComplete', function (up, files) {
+                console.log(uploader);
+                // renew the file object
+                if (config.status == "thumb") {
+                    // remove all files
+                    files = [];
+                    up.settings.multipart_params.key = config.key + '/${filename}';
+                    up.settings.resize = null;
+                } else {
+                    up.settings.multipart_params.key = config.key + '/thumbs/${filename}';
+                    up.settings.resize = {width:200, height:200};
+                    $.each(files, function (index, value) {
+                        value.percent = 0;
+                        value.status = 1;
+                    });
+                    config.status = "thumb";
+                    up.start();
+                }
+            });
+
+            uploader.bind('UploadProgress', function (up, file) {
+                $('#' + file.id + ' .percent').html(file.percent + '%');
+            });
+
+            // shows error object in the browser console (for now)
+            uploader.bind('Error', function (up, error) {
+                // unfortunately PLUpload gives some extremely vague
+                // Flash error messages so you have to use WireShark
+                // for debugging them (read the README)
+
+                alert('Что-то непонятное произошло. Firebug в помощь.');
+                console.log('Expand the error object below to see the error. Use WireShark to debug.');
+
+                console.log(error);
+            });
+
+            // when file gets uploaded
+            uploader.bind('FileUploaded', function (up, file) {
+                //console.log(up);
+                //console.log(file);
+                // save file location in the database
+                if (config.status == "original") {
+                    // no need to save thumbnails as separate objects
+                    Photo.Album.Form.post(file);
+                }
+                //console.log(config.status);
+                up.refresh();
+            });
+
+            Photo.Plupload.self = uploader;
+
+            $(".plupload").hover(function () {
+                // unless album is open, nuke the flash object
+                // console.log("refresh");
+                if ($("#pickfiles").length == 0) {
+                    $(".plupload").remove();
+                }
+            });
+
+        }
+    },
+    Images:{
+        offset:0,
+        finished:false,
+        get_next:function (user_id) {
+            if (!Photo.Images.finished) {
+                $.ajax({
+                    type:"GET",
+                    url:"/images",
+                    data:{offset:Photo.Images.offset, user_id:user_id},
+                    success:function (msg) {
+                        if (msg.images.length != 0) {
+                            Main.user_tmp.PhotoList.add(msg.images);
+                            Photo.Images.offset = msg.offset;
+                            Photo.Images.render();
+                        } else {
+                            Photo.Images.finished = true;
+                        }
+                    },
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                    }
+                });
+            }
+        },
+        render:function () {
+            scroll = $(".central_panel").scrollTop();
+            $(".all_photo_list").empty();
+            $.each(Main.user_tmp.PhotoList.models, function (index, value) {
+                $("#image_thumb_template").tmpl({value:value}).appendTo(".all_photo_list");
+            });
+            $(".central_panel").scrollTop(scroll);
+            if (Main.user_tmp.attributes.id == Main.user.attributes.id) {
+                Photo.init_dragging();
+            }
+        }
+    },
+    Image:{
+        get:function (id) {
+            // get and render any image
+            $.ajax({
+                type:"get",
+                url:"/images/" + id,
+                success:function (msg) {
+                    Main.image_tmp = new imagex(msg.image);
+                    Photo.Image.render();
+                    Comments.get({image_id:id});
+                },
+                error:function (request, status, error) {
+                    x_alert(request.responseText);
+                }
+            });
+        },
+        render:function () {
+            image = Main.image_tmp;
+            console.log(image);
+            $(".container").empty();
+            $("#image_template").tmpl({image:image}).appendTo(".container");
+            if (Main.user.attributes.id == Main.image_tmp.attributes.user_id) {
+                Photo.Image.Form.init();
+                $(".image_container").append("<div class='image_menu_toggler' onclick='Photo.Image.Form.show();' title='Редактировать'></div>");
+            }
+            if (parseInt(Main.user.id) != 0) {
+                $("#comment_form_template").tmpl({image_id:image.attributes.id}).appendTo(".comments_container");
+                editor_init("comment_content");
+            }
+        },
+        Form:{
+            init:function () {
+                $("#image_form_container").remove();
+                $("#image_form_template").tmpl(Main.image_tmp.attributes).appendTo(".container");
+                editor_init("image_description");
+                $("#image_form_container").draggable();
+            },
+            show:function () {
+                $("#image_form_container").show();
+            },
+            hide:function () {
+                $("#image_form_container").hide();
+            },
+            post:function () {
+                tinyMCE.activeEditor.save();
+                Photo.Image.Form.Spinner.show();
+                $.ajax({
+                    type:"PUT",
+                    url:"/images/" + Main.image_tmp.attributes.id,
+                    data:$("#image_form").serialize(),
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                        Photo.Image.Form.Spinner.hide();
+                        //tinyMCE.activeEditor.setContent("");
+                    },
+                    success:function (msg) {
+                        Photo.Image.Form.Spinner.hide();
+                        Photo.Image.Form.hide();
+                        Main.image_tmp = new imagex(msg.image)
+                        Photo.Image.render();
+                    }
+                });
+            },
+            Spinner:{
+                show:function () {
+                    $("#image_form_container .glass").show();
+                },
+                hide:function () {
+                    $("#image_form_container .glass").hide();
+                }
+            }
+        }
+    }
+};

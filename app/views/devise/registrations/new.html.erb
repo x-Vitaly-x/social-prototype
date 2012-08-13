@@ -1,0 +1,26 @@
+<div class="sign_in">
+  <div class="heading">Регистрация</div>
+
+  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+      <% p devise_error_messages! %>
+      <% unless flash.empty? and devise_error_messages!.blank? %>
+          <div class="errors"><%= devise_error_messages! %>
+            <%- flash.each do |key, msg| -%>
+                <div id="<%= key %>">
+                  <p><%= msg %></p>
+                </div>
+            <%- end -%>
+          </div>
+      <% end %>
+      <div class="field"><%= f.label "Логин" %><br />
+        <%= f.text_field :username %></div>
+      <div class="field"></div>
+      <div class="field"><%= f.label "Пароль" %><br/>
+        <%= f.password_field :password %></div>
+      <div class="field"><%= f.label "Повторите пароль" %>
+        <br/>
+        <%= f.password_field :password_confirmation %></div>
+      <div class="button"><%= f.submit "Зарегистрироваться" %></div>
+  <% end %>
+</div>
+

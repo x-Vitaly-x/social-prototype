@@ -1,0 +1,46 @@
+<script id="news_entry_template" type="text/x-jquery-tmpl">
+  <div class="news_entry_container">
+    <div class="news_entry">
+      <div class="title">
+        ${title}
+      </div>
+      <div class="description">
+        {{html description_long}}
+      </div>
+      <div class="menu">
+        <div class="button show_all">
+          Открыть все комментарии
+        </div>
+        <% if current_user %>
+            <div class="button comment">
+              Написать комментарий
+            </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="comments_container">
+    <div class="comments_list">
+    </div>
+  </div>
+</script>
+<script id="news_entry_preview_template" type="text/x-jquery-tmpl">
+  <a class="news_entry" entry-id="${id}" href="/news_entries/${id}" onclick="event.stopPropagation();event.preventDefault();" onContextMenu="console.log('admin');;return false">
+    <div class="title">
+      ${title}
+    </div>
+    <div class="description">
+      {{html description}}
+    </div>
+  </a>
+</script>
+<script id="news_entry_form_template" type="text/x-jquery-tmpl">
+  <form id="news_entry_form" onsubmit="News.Entry.post();return false" class="news_entry_form">
+    <input type="text" size="30" name="news_entry[title]" id="news_entry_title" value="${title}" title="Title">
+    <textarea rows="20" name="news_entry[description]" id="news_entry_description" title="Description">{{html
+      description}}</textarea>
+
+    <div class="validation-error"></div>
+    <input type="submit" value="Create News entry" name="commit" class="submit">
+  </form>
+</script>

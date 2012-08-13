@@ -14,8 +14,18 @@ AllRightAction::Application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
-
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.googlemail.com",
+    :port                 => 587,
+    :domain               => 'empty-cloud-5450.herokuapp.com',
+    :user_name            => 'svitaly88',
+    :password             => 'vitaly88',
+    :authentication       => 'plain',
+    :enable_starttls_auto => true  }
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
@@ -34,4 +44,7 @@ AllRightAction::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  Paperclip.options[:command_path] = 'c:\Program Files (x86)\ImageMagick-6.7.8-Q16'
+
 end

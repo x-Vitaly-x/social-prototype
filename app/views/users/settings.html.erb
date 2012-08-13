@@ -1,0 +1,7 @@
+<script type="text/javascript">
+    window.history.replaceState({type:"settings"}, "", "/settings");
+    // get and render your profile
+    $(document).one("ajaxStop", function () {
+        Settings.get(<%= @user.id %>);
+    });
+</script>

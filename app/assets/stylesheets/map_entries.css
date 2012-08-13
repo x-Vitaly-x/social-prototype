@@ -1,0 +1,141 @@
+.container .map_container
+{
+	margin: 2%;
+	padding: 2%;
+	border-radius: 10px;
+	background-color: #E0CFCF;
+	/*+placement:shift 0px 0px;*/
+	position: relative;
+	left: 0px;
+	top: 0px;
+	height: 300px;
+}
+.container .event_list_container
+{
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	width: 46%;
+	padding: 0% 2% 2%;
+}
+.container .event_list_container .map_entry
+{
+	padding: 2%;
+	margin-bottom: 1%;
+	background-color: #A8C3E1;
+	cursor: pointer;
+	opacity: 0.9;
+}
+.map_container .menu
+{
+	position: absolute;
+	z-index: 1;
+	height: 17%;
+	width: 96%;
+	background: rgba(205, 205, 205, 0.7);
+	display: none;
+}
+.map_container .menu .button
+{
+	border: 1px solid #B98B8B;
+	/*+placement:float-right 0px 0px;*/
+	float: right;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	margin-top: 0.5%;
+	margin-right: 2%;
+	height: 60%;
+	padding-top: 1%;
+	padding-right: 2%;
+	padding-left: 2%;
+	font-family: fantasy;
+	border-radius: 5px;
+	background-color: #A3DCAC;
+	opacity: 0.8;
+	cursor: pointer;
+}
+.map_container .map_canvas
+{
+	height: 100%;
+	border-radius: 10px;
+	width: 100%;
+}
+.map_container .menu_toggler
+{
+	height: 40px;
+	z-index: 1;
+	background-image: url("/assets/gear_icon.png");
+	cursor: pointer;
+	position: absolute;
+	/*+placement:anchor-bottom-right 0px 0px;*/
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 40px;
+	background-color: #E0CFCF;
+	border-radius: 10px;
+	opacity: 0.7;
+}
+.map_container .menu_toggler:hover
+{
+	opacity: 1;
+}
+.map_container .menu .button:hover
+{
+	opacity: 1;
+}
+.map_container .menu_toggler.selected
+{
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+.container .event_container
+{
+	/*+placement:float-right 0px 0px;*/
+	float: right;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	background-color: #B09F9F;
+	width: 50%;
+}
+.container .event_list_container .map_entry:first-child
+{
+	border-radius: 10px 10px 0 0;
+}
+.container .event_list_container .map_entry:last-child
+{
+	border-radius: 10px;
+}
+.container .event_list_container .map_entry:hover
+{
+	opacity: 1;
+}
+.event_list_container .map_entry .description
+{
+	text-align: justify;
+	font-family: Cambria;
+	font-size: 90%;
+}
+.event_list_container .map_entry .title
+{
+	border: 1px solid #63A3EC;
+	margin-left: -2%;
+	margin-right: -2%;
+	margin-top: -2%;
+	padding: 2% 2% 0%;
+	text-align: center;
+	background-color: #7AAFEA;
+}
+.event_list_container .map_entry:first-child .title
+{
+	border-radius: 10px 10px 0 0;
+}

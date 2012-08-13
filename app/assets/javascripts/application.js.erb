@@ -1,0 +1,122 @@
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
+// or vendor/assets/javascripts of plugins, if any, can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// the compiled file.
+//
+// WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
+// GO AFTER THE REQUIRES BELOW.
+//
+//= require jquery
+//= require jquery_ujs
+// require_tree .
+
+//******* history handler ********
+$(document).ready(function () {
+    window.onpopstate = function (event) {
+        if (event.state != null) {
+            if (event.state.type == "entry") {
+                News.Entry.get(event.state.id);
+            } else if (event.state.type == "map_entries") {
+                Map.init();
+            } else if (event.state.type == "albums") {
+                Photo.Albums.get(event.state.id);
+            } else if (event.state.type == "album") {
+                Photo.Album.get(event.state.id);
+            } else if (event.state.type == "image") {
+                Photo.Image.get(event.state.id);
+            } else if (event.state.type == "user") {
+                User.get(event.state.id);
+            } else if (event.state.type == "settings") {
+                Settings.get();
+            } else if (event.state.type == "main") {
+                // primary handler
+            }
+        }
+    };
+
+    //****** menu toggler ******
+    $(".logo .menu_toggler").on("click", function () {
+        Menu.toggle();
+    });
+});
+
+Menu = {
+    toggle:function () {
+        if ($(".logo .menu_toggler").hasClass("selected")) {
+            $(".logo .menu_toggler").removeClass("selected");
+            $(".logo .menu").hide("fade");
+        } else {
+            $(".logo .menu_toggler").addClass("selected");
+            $(".logo .menu").show("fade");
+        }
+    }
+};
+
+function x_alert(text) {
+    $(".alert_window P").text(text);
+    $(".alert_window").show();
+}
+;
+
+function x_alert_close() {
+    $(".alert_window").hide();
+}
+;
+
+function scrollBottom(elem){
+    return (elem[0].scrollHeight - elem.scrollTop() - elem.outerHeight());
+};
+
+// add event handler
+var addEvent = (function () {
+    if (document.addEventListener) {
+        return function (el, type, fn) {
+            if (el && el.nodeName || el === window) {
+                el.addEventListener(type, fn, false);
+            } else if (el && el.length) {
+                for (var i = 0; i < el.length; i++) {
+                    addEvent(el[i], type, fn);
+                }
+            }
+        };
+    } else {
+        return function (el, type, fn) {
+            if (el && el.nodeName || el === window) {
+                el.attachEvent('on' + type, function () {
+                    return fn.call(el, window.event);
+                });
+            } else if (el && el.length) {
+                for (var i = 0; i < el.length; i++) {
+                    addEvent(el[i], type, fn);
+                }
+            }
+        };
+    }
+})();
+
+function editor_init(element) {
+    $(document).ready(function () {
+        tinyMCE.init({
+            mode:"exact",
+            elements:element,
+            theme:"simple",
+            height:"100px",
+            width:"100%",
+            skin:"o2k7",
+            skin_variant:"black",
+            theme_simple_toolbar_location:"top",
+            plugins:"paste",
+            paste_auto_cleanup_on_paste:true,
+            paste_remove_spans:true,
+            paste_retain_style_properties:"none",
+            paste_strip_class_attributes:"all",
+            gecko_spellcheck:true,
+            invalid_elements:"div,style,span,b,i,table,tr,td,th,tbody,form,font,input,select,textarea,pre,img,xmp,meta,script,object,applet,a,iframe,option,embed"
+        });
+    });
+}
+;

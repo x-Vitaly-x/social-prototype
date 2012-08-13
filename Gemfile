@@ -7,33 +7,24 @@ gem 'rails', '3.2.2'
 
 gem 'mysql2'
 gem "pg"
-
-gem 'slim'
-
-
-# authentication
-gem 'omniauth-identity'
-gem 'omniauth-vkontakte'
-
-
-group :development, :test do
-  gem 'cucumber-rails'
-  gem 'rspec-rails'
-  gem 'factory_girl_rails'
-  gem 'show_me_the_cookies'
-  gem 'capybara'
-  gem 'database_cleaner'
-end
+gem "devise"
+gem "omniauth-facebook"
+gem "omniauth-vkontakte"
+gem 'annotate', :git => 'git://github.com/ctran/annotate_models.git'
+gem "sanitize"
+gem "geokit-rails3"
+gem "aws-sdk"
+gem "paperclip"
+gem "haml"
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-  gem 'execjs'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  gem 'therubyracer'
+  # gem 'therubyracer'
 
   gem 'uglifier', '>= 1.0.3'
 end
@@ -41,7 +32,7 @@ end
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0'
+# gem 'bcrypt-ruby', '~> 3.0.0'
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'

@@ -1,0 +1,22 @@
+<div id="chat" class="connected">
+  <div id="messages">
+    <div class="glass">
+    </div>
+    <% if current_user %>
+        <form id="send_message" onsubmit="return Chat.Message.post();">
+          <input id="message"/>
+          <button>Send</button>
+        </form>
+    <% end %>
+    <div class="nicknames">
+      <div class="nicknames_toggler">
+        <span class="online_counter">Online</span>
+      </div>
+    </div>
+    <div id="lines">
+
+      <div class="messages_container">
+      </div>
+    </div>
+  </div>
+</div>

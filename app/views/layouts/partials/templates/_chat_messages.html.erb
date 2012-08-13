@@ -1,0 +1,9 @@
+<script id="chat_message_template" type="text/x-jquery-tmpl">
+  <div class="chat_message">
+    <a class="avatar user_trigger" user-id="${message.user_id}" href="/users/${message.user_id}" onclick="event.stopPropagation();event.preventDefault();" title="${message.username}" style="background-image:url('${message.avatar}')">
+    </a>
+    <p class="content">
+      ${message.content}
+    </p>
+  </div>
+</script>

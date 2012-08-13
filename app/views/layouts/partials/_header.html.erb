@@ -1,0 +1,17 @@
+<ul class="top_menu">
+  <% if current_user %>
+      <%= link_to raw("<li><span>logout</span></li>"), destroy_user_session_path, :method => :delete %>
+      <a id="albums_toggler">
+        <li><span>Мои фото</span></li>
+      </a>
+      <%= link_to raw("<li><span>edit</span></li>"), edit_user_registration_path, :method => :get %>
+      <a id="profile_toggler">
+        <li><span>Моя страница</span></li>
+      </a>
+      <a id="settings_toggler">
+        <li><span>Мои настройки</span></li>
+      </a>
+  <% else %>
+      <%= render "devise/links" %>
+  <% end %>
+</ul>

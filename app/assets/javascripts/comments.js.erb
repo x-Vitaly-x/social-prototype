@@ -1,0 +1,174 @@
+$(document).ready(function () {
+    //******* comment form handling *******
+    $(".comment .menu .answer").live("click", function () {
+        Comments.open(Main.CommentList.get(parseInt($(this).attr("data-comment-id"))));
+        Comments.show_form($(this).attr("data-comment-id"));
+    });
+    $("#comment_form_container .close").live("click", function () {
+        Comments.close_form();
+    });
+    $(".menu .comment").live("click", function () {
+        Comments.show_form();
+    });
+
+    //******* comment reply opening *******
+    $(".replies_container .heading").live("click", function () {
+        Comments.open_thread(Main.CommentList.get(parseInt($(this.parentElement).attr("parent-id"))));
+        Comments.render_all();
+    });
+    $(".replies_container .close_icon").live("click", function () {
+        Comments.close_thread(Main.CommentList.get(parseInt($(this.parentElement).attr("parent-id"))));
+        Comments.render_all();
+    });
+    $(".menu .show_all").live("click", function () {
+        //hide self
+        $(".menu .show_all").hide();
+        //open all comments
+        Comments.open_all();
+        Comments.render_all();
+    });
+
+});
+Comments = {
+    hide_answers:true,
+    current_options:{},
+    add:function (comments_json) {
+        //cl = new CommentList(comments_json);
+        Main.CommentList.add(comments_json);
+        Main.TmpCommentList = new CommentList();
+        Comments.parse();
+    },
+    show_form:function (parent_id) {
+        $("#comment_form_container").show();
+        $("#comment_form_container").draggable();
+        if (typeof(parent_id) != "undefined") {
+            $("#parent_id").val(parent_id);
+        }
+    },
+    close_form:function () {
+        $("#comment_form_container").hide();
+        $("#parent_id").val(null);
+        if (typeof(tinyMCE.getInstanceById("comment_content")) != "undefined") {
+            tinyMCE.getInstanceById("comment_content").setContent("");
+        }
+    },
+    get:function (options) {
+        $.ajax({
+            type:"GET",
+            url:"/comments",
+            data:options,
+            error:function (request, status, error) {
+                x_alert(request.responseText);
+            },
+            success:function (msg) {
+                Comments.current_options = options;
+                Main.CommentList.add(msg.comments);
+                Main.TmpCommentList = new CommentList();
+                Comments.parse();
+                Comments.render_all();
+            }
+        });
+    },
+    post:function () {
+        tinyMCE.activeEditor.save();
+        Comments.Spinner.show();
+        $.ajax({
+            type:"POST",
+            url:"/comments",
+            data:$("#comment_form").serialize(),
+            error:function (request, status, error) {
+                x_alert(request.responseText);
+                Comments.Spinner.hide();
+                //tinyMCE.activeEditor.setContent("");
+            },
+            success:function (msg) {
+                Comments.add(msg.comment);
+                Comments.Spinner.hide();
+                Comments.close_form();
+                Comments.render_all();
+            }
+        });
+    },
+    render_all:function () {
+        scroll = $(".central_panel").scrollTop();
+        $(".comments_list").empty();
+        if (Main.TmpCommentList.models.length > 0) {
+            Comments.render(Main.TmpCommentList.models, ".comments_container .comments_list");
+            if (_.filter(Main.TmpCommentList.models,
+                    function (model) {
+                        if (model.CommentList.models.length > 0) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    }).length > 0) {
+                $(".menu .show_all").show();
+            } else {
+                $(".menu .show_all").hide();
+            }
+        } else {
+            $(".menu .show_all").hide();
+        }
+        Comments.close_form();
+        $(".central_panel").scrollTop(scroll);
+    },
+    render:function (comments, element) {
+        $.each(comments, function (index, value) {
+            value.attributes.replies = value.CommentList.models.length;
+            $("#comment_template").tmpl(value.attributes).appendTo(element);
+            Comments.render(value.CommentList.models, $("[parent-id=" + value.attributes.id + "]").children(".replies"));
+            if (value.attributes.hide_answers == true) {
+                $("[parent-id=" + value.attributes.id + "]").children(".replies").hide();
+                $("[parent-id=" + value.attributes.id + "]").children(".close_icon").hide();
+                $("[parent-id=" + value.attributes.id + "]").children(".heading").show();
+            } else {
+                $("[parent-id=" + value.attributes.id + "]").children(".replies").show();
+                $("[parent-id=" + value.attributes.id + "]").children(".close_icon").show();
+                $("[parent-id=" + value.attributes.id + "]").children(".heading").hide();
+            }
+        });
+    },
+    parse:function () {
+        comments = Main.CommentList.where(Comments.current_options);
+        //console.log(comments);
+        $.each(comments, function (index, value) {
+            if (value.attributes.parent_id != null) {
+                //console.log(value);
+                Main.CommentList.get(parseInt(value.attributes.parent_id)).CommentList.add(value);
+            } else {
+                Main.TmpCommentList.add(value);
+            }
+        });
+    },
+    open_all:function () {
+        $.each(Main.CommentList.models, function (index, value) {
+            Comments.open(value);
+        });
+    },
+    open:function (comment) {
+        comment.set({hide_answers:false});
+    },
+    close:function (comment) {
+        comment.set({hide_answers:true});
+    },
+    open_thread:function (comment) {
+        comment.set({hide_answers:false});
+        $.each(comment.CommentList.models, function (index, value) {
+            Comments.open_thread(value);
+        });
+    },
+    close_thread:function (comment) {
+        comment.set({hide_answers:true});
+        $.each(comment.CommentList.models, function (index, value) {
+            Comments.close_thread(value);
+        });
+    },
+    Spinner:{
+        show:function () {
+            $("#comment_form_container .glass").show();
+        },
+        hide:function () {
+            $("#comment_form_container .glass").hide();
+        }
+    }
+}

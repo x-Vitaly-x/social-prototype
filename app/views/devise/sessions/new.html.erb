@@ -1,0 +1,34 @@
+<div class="sign_in">
+  <div class="heading">Sign in</div>
+
+  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+      <% unless flash.empty? and devise_error_messages! %>
+          <div class="errors"><%= devise_error_messages! %>
+            <%- flash.each do |key, msg| -%>
+                <div id="<%= key %>">
+                  <p><%= msg %></p>
+                </div>
+            <%- end -%>
+          </div>
+      <% end %>
+      <div class="field"><%= f.label :login %>
+        <br/>
+        <%= f.text_field :login %></div>
+
+      <div class="field"><%= f.label :password %>
+        <br/>
+        <%= f.password_field :password %></div>
+
+      <%- if devise_mapping.omniauthable? %>
+          <%- resource_class.omniauth_providers.each do |provider| %>
+              <%= link_to raw("<div class='field #{provider.to_s}'>#{provider.to_s.titleize}</div>"), omniauth_authorize_path(resource_name, provider) %>
+          <% end -%>
+      <% end -%>
+
+      <% if devise_mapping.rememberable? -%>
+          <div class="box"><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+      <% end -%>
+
+      <div class="button"><%= f.submit "Sign in" %></div>
+  <% end %>
+</div>

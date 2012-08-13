@@ -1,0 +1,8 @@
+development:
+  bucket: allrightaction-dev
+  access_key_id: AKIAIUZCPWAGNETP5VOQ
+  secret_access_key: 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
+production:
+  bucket: allrightaction-pro
+  access_key_id: AKIAIUZCPWAGNETP5VOQ
+  secret_access_key: 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

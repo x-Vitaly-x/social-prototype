@@ -1,0 +1,50 @@
+<script id="comment_form_template" type="text/x-jquery-tmpl">
+  <div id="comment_form_container" class="basic_form_container">
+    <div class="close">
+    </div>
+    <div class="glass">
+    </div>
+    <form id="comment_form" onsubmit="Comments.post();return false" class="basic_form">
+      <textarea rows="20" name="comment[content]" id="comment_content">{{html content_x}}</textarea>
+
+      <div class="validation-error"></div>
+      <input type="hidden" id="news_entry_id" value="${news_entry_id}" name="comment[news_entry_id]">
+      <input type="hidden" id="image_id" value="${image_id}" name="comment[image_id]">
+      <input type="hidden" id="parent_id" name="comment[parent_id]">
+      <input type="submit" value="Comment" name="commit" class="submit">
+    </form>
+  </div>
+</script>
+
+<script id="comment_template" type="text/x-jquery-tmpl">
+  <div class="comment" comment-id="${id}">
+    <div class="author">
+      <a class="avatar user_trigger" user-id="${user.id}" href="/users/${user.id}" onclick="event.stopPropagation();event.preventDefault();" style="background-image:url('${user.avatar}')">
+      </a>
+      <div class="name">
+        ${user.name}
+      </div>
+    </div>
+    <div class="description">
+      {{html content}}
+    </div>
+    <% if current_user %>
+        <div class="menu">
+          <a class="like" data-comment-id="${id}" title="like"></a>
+          <a class="answer" data-comment-id="${id}" title="answer"></a>
+        </div>
+    <% end %>
+  </div>
+
+  {{if (replies>0)}}
+  <div class="replies_container" parent-id="${id}">
+    <div class="heading">
+      ${replies} replies
+    </div>
+    <div class="replies">
+    </div>
+    <div class="close_icon">
+    </div>
+  </div>
+  {{/if}}
+</script>

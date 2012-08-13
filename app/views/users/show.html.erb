@@ -1,0 +1,5 @@
+<script type="text/javascript">
+    window.history.replaceState({type:"user", id:<%= @user.id %>}, "", "/users/" + <%= @user.id %>);
+    // get and render your profile
+    User.get(<%= @user.id %>);
+</script>

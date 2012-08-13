@@ -1,0 +1,133 @@
+<script id="profile_template" type="text/x-jquery-tmpl">
+  <div class="profile_container">
+    <div class="user_info">
+      <div class="photo">
+        <div class="avatar" style="background-image:url('${user.attributes.avatar.image}')">
+        </div>
+        <div class="list">
+        </div>
+        <div class="friends">
+            {{each user.attributes.friends }}
+            <a class="friend user_trigger" href="/users/${$value.id}" onclick="event.stopPropagation();event.preventDefault();" user-id="${$value.id}" title="Страница пользователя">
+              <div class="userpic" style="background-image:url('${$value.avatar}')"></div>
+              <h3 class="name">${$value.name}</h3>
+            </a>
+            {{/each}}
+        </div>
+      </div>
+      <div class="description">
+        <h2>
+          о себе
+        </h2>
+        {{each user.attributes.description }}
+        {{if $value[1].length > 0}}
+        <div class="description_item">
+          <h3 class="description_cat">${$value[0]}</h3>
+
+          <div class="description_desc">${$value[1]}</div>
+        </div>
+        {{/if}}
+        {{/each}}
+      </div>
+      <div class="context_menu">
+        {{if user.attributes.facebook_id != null}}
+        <a href="https://www.facebook.com/${user.attributes.facebook_id}" class="social_link">
+          <div class="avatar" style="background-image:url('${user.attributes.facebook_avatar_url}')">
+          </div>
+          <h3>My facebook</h3>
+        </a>
+        {{/if}}
+        {{if user.attributes.vkontakte_id != null}}
+        <a href="https://www.vk.com/id${user.attributes.vkontakte_id}" class="social_link">
+          <div class="avatar" style="background-image:url('${user.attributes.vkontakte_avatar_url}')">
+          </div>
+          <h3>Я Вконтакте</h3>
+        </a>
+        {{/if}}
+        <div>
+          {{if user.attributes.relation == "unrelated"}}
+          <a class="button befriend" title="подписаться на обновления / добавить в друзья">
+            Подписаться
+          </a>
+          {{/if}}
+          {{if user.attributes.relation == "friend"}}
+          <a class="button befriend" title="убрать пользователя из друзей / отписаться от обновлений">
+            Убрать из друзей
+          </a>
+          {{/if}}
+          {{if user.attributes.relation == "followee"}}
+          <a class="button befriend" title="отписаться от обновлений">
+            Отписаться
+          </a>
+          {{/if}}
+          {{if user.attributes.relation == "follower"}}
+          <a class="button befriend" title="подтвердить заявку в друзья">
+            Добавить в друзья
+          </a>
+          {{/if}}
+          {{if user.attributes.relation != "self"}}
+          <a class="button mail" title="отправить личное сообщение">
+            Написать сообщение
+          </a>
+          {{/if}}
+        </div>
+      </div>
+      <div class="groups">
+        user groups
+      </div>
+    </div>
+    <div class="wall">
+      wall
+    </div>
+  </div>
+</script>
+
+<script id="avatar_form_template" type="text/x-jquery-tmpl">
+  <div id="avatar_form_container" class="basic_form_container">
+    <div class="close" onclick="User.Avatar.Form.hide();">
+    </div>
+    <h4>
+    </h4>
+
+    <div class="album" album-id="${album.attributes.id}">
+      <div id="pickfiles">
+        Загрузить фото
+      </div>
+      <div class="photos_container">
+        {{each album.PhotoList.models}}
+        {{tmpl({value:$value}) "#image_thumb_template"}}
+        {{/each}}
+      </div>
+    </div>
+    <div class="glass">
+    </div>
+  </div>
+</script>
+
+<script id="description_form_template" type="text/x-jquery-tmpl">
+  <div id="description_form_container" class="basic_form_container">
+    <div class="close" onclick="User.Description.Form.hide();">
+    </div>
+
+    <form id="description_form" onsubmit="User.Description.Form.post();return false" class="basic_form">
+      <% t = user_description_template %>
+      <% t.each_with_index do |t_name, i| %>
+          <div class="form_section">
+            <% if t_name.class == Hash # options
+            %>
+                <% name = t_name.keys.first %>
+                <label for="item_<%= i.to_s %>"><%= name %></label>
+                <%= select_tag "description[#{name.to_s}]", options_for_select(t_name.values.flatten), :id => "item_#{i.to_s}" %>
+            <% else #probably string
+            %>
+                <label for="item_<%= i.to_s %>"><%= t_name %></label>
+                <input type="text" name="description[<%= t_name.to_s %>]" id="item_<%= i.to_s %>">
+            <% end %>
+          </div>
+      <% end %>
+      <input type="submit" value="Редактировать" name="commit" class="submit">
+    </form>
+    <div class="glass">
+    </div>
+  </div>
+</script>

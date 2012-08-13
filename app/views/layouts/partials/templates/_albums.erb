@@ -1,0 +1,102 @@
+<script id="albums_template" type="text/x-jquery-tmpl">
+  <div class="albums_container">
+    <div id="new_album">
+      Новый альбом
+    </div>
+    <div class="albums_list">
+      {{each albums.models}}
+      <div class="album_link" draggable="true" album-id="${$value.attributes.id}" position="${$value.attributes.position}">
+        <div class="album_image" style="background-image:url('${$value.attributes.icon}')">
+        </div>
+        <div class="album_title">
+          ${$value.attributes.title}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    <div class="all_photo_list">
+
+    </div>
+  </div>
+</script>
+
+<script id="album_form_template" type="text/x-jquery-tmpl">
+  <div id="album_form_container" class="basic_form_container">
+    <div class="close" onclick="Photo.Albums.Form.hide();">
+    </div>
+    <div class="glass">
+    </div>
+    <form id="album_form" onsubmit="Photo.Albums.post();return false" class="basic_form">
+      <input type="text" size="30" name="album[title]" id="album_title" title="Title" value="${title}">
+      <textarea rows="20" name="album[description]" id="album_description" title="Description">{{html
+        description}}</textarea>
+
+      <div class="validation-error"></div>
+      <input type="submit" value="Создать альбом" name="commit" class="submit">
+    </form>
+  </div>
+</script>
+
+<script id="album_template" type="text/x-jquery-tmpl">
+  <div class="album" album-id="${album.attributes.id}">
+    <div id="pickfiles">
+      Загрузить фото
+    </div>
+    <div class="album_title">
+      ${album.attributes.title}
+    </div>
+    <div class="album_description">
+      {{html album.attributes.description}}
+    </div>
+    <div class="photos_container">
+      {{each album.PhotoList.models}}
+      {{tmpl({value:$value}) "#image_thumb_template"}}
+      {{/each}}
+    </div>
+  </div>
+</script>
+
+<script id="image_thumb_template" type="text/x-jquery-tmpl">
+  <div id="${value.attributes.s3_id}" draggable="true" class="photo_thumb" image-id="${value.attributes.id}" position="${value.attributes.position}" style="background-image:url('${value.attributes.icon}')">
+  </div>
+</script>
+
+<script id="image_template" type="text/x-jquery-tmpl">
+  <div class="image_container">
+    <div class="close" onclick="history.back();">
+    </div>
+    <div class="photo" style="background-image:url('${image.attributes.image}')"></div>
+    <div class="image_description">
+      {{html image.attributes.description}}
+    </div>
+    <div class="menu">
+      <% if current_user %>
+          <div class="button comment">
+            Написать комментарий
+          </div>
+      <% end %>
+      <div class="button show_all">
+        Открыть все комментарии
+      </div>
+    </div>
+  </div>
+  <div class="comments_container">
+    <div class="comments_list">
+    </div>
+  </div>
+</script>
+
+<script id="image_form_template" type="text/x-jquery-tmpl">
+  <div id="image_form_container" class="basic_form_container">
+    <div class="close" onclick="Photo.Image.Form.hide();">
+    </div>
+    <div class="glass">
+    </div>
+    <form id="image_form" onsubmit="Photo.Image.Form.post();return false" class="basic_form">
+      <textarea rows="20" name="image[description]" id="image_description" title="Описание">{{html
+        description}}</textarea>
+      <div class="validation-error"></div>
+      <input type="submit" value="Редактировать" name="commit" class="submit">
+    </form>
+  </div>
+</script>

@@ -1,0 +1,6 @@
+<script type="text/javascript">
+    window.history.replaceState({type : "entry", id : <%= @id %>}, "", "/news_entries/<%= @id %>");
+    $(document).one("ajaxStop", function(){
+        News.Entry.get(<%= @id %>);
+    });
+</script>

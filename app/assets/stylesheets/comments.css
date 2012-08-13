@@ -1,0 +1,217 @@
+/*+clearfix {*/
+.comments_container .comments_list:after, .container .comments_container:after, .replies_container .close_icon:after, .comments_container .comments_list .comment:after, .comments_list .replies_container:after, .replies_container .heading:after, .comment .author:after, .comment .menu .like:after, .comment .menu .answer:after
+{
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	font-size: 0;
+}
+.comments_container .comments_list, .container .comments_container, .replies_container .close_icon, .comments_container .comments_list .comment, .comments_list .replies_container, .replies_container .heading, .comment .author, .comment .menu .like, .comment .menu .answer
+{
+	display: inline-block;
+}
+.comments_container .comments_list, .container .comments_container, .replies_container .close_icon, .comments_container .comments_list .comment, .comments_list .replies_container, .replies_container .heading, .comment .author, .comment .menu .like, .comment .menu .answer
+{
+/*\*/
+	display: block;
+/**/
+	-height: 1px;
+}
+/*+}*/
+/*[clearfix]*/.comments_container .comments_list
+{
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+}
+/*[clearfix]*/.container .comments_container
+{
+	margin-left: 4%;
+	margin-right: 4%;
+	/*+placement:shift 0px 0px;*/
+	position: relative;
+	left: 0px;
+	top: 0px;
+	margin-bottom: 20%;
+}
+/*[clearfix]*/.replies_container .close_icon
+{
+	position: absolute;
+	/*+placement:anchor-top-left 0px 0px;*/
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	background-image: url("/assets/plusminus.JPG");
+	width: 15px;
+	height: 15px;
+	opacity: 0.6;
+	background-position: 18px 0px;
+	cursor: pointer;
+}
+/*[clearfix]*/.comments_container .comments_list .comment
+{
+	padding: 3px 3px 20px;
+	font-size: 80%;
+	font-family: "Times New Roman";
+	/*+placement:shift 0px 0px;*/
+	position: relative;
+	left: 0px;
+	top: 0px;
+	height: 97%;
+	background-color: #F0EEEE;
+	border: 1px solid #DAD5D5;
+/*CSS3 Box Shadow*/
+	-moz-box-shadow: 2px 2px 4px #444;
+	-webkit-box-shadow: 2px 2px 4px #444;
+	-o-box-shadow: 2px 2px 4px #444;
+	box-shadow: 2px 2px 4px #444;
+}
+/*[clearfix]*/.comments_list .replies_container
+{
+	/*[empty]background-color:;*/
+	/*+placement:shift 0px 0px;*/
+	position: relative;
+	left: 0px;
+	top: 0px;
+	padding-left: 15px;
+}
+/*[clearfix]*/.replies_container .heading
+{
+	margin-bottom: 10px;
+	text-align: center;
+	width: 50%;
+	margin-left: 25%;
+	padding-bottom: 10px;
+	padding-top: 5px;
+	background-color: #BDADAD;
+	font-family: Calibri;
+	border-radius: 0 0 10px 10px;
+	opacity: 0.7;
+	font-weight: bold;
+	cursor: pointer;
+/*CSS3 Box Shadow*/
+	-moz-box-shadow: 2px 2px 4px #444;
+	-webkit-box-shadow: 2px 2px 4px #444;
+	-o-box-shadow: 2px 2px 4px #444;
+	box-shadow: 2px 2px 4px #444;
+}
+/*[clearfix]*/.comment .author
+{
+	font-size: 90%;
+	font-weight: bold;
+	background-color: #DAD5D5;
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	width: 20%;
+/*CSS3 Box Shadow*/
+	-moz-box-shadow: 2px 2px 4px #444;
+	-webkit-box-shadow: 2px 2px 4px #444;
+	-o-box-shadow: 2px 2px 4px #444;
+	box-shadow: 2px 2px 4px #444;
+}
+.comment .menu
+{
+	width: 45px;
+	height: 20px;
+	/*+placement:anchor-bottom-right 0px 0px;*/
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	padding-bottom: 3px;
+	padding-right: 3px;
+}
+/*[clearfix]*/.comment .menu .like
+{
+	width: 20px;
+	height: 20px;
+	background-image: url("/assets/like-icon.jpg");
+	opacity: 0.7;
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	cursor: pointer;
+}
+/*[clearfix]*/.comment .menu .answer
+{
+	width: 20px;
+	height: 20px;
+	/*+placement:float-right 0px 0px;*/
+	float: right;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	background-image: url("/assets/answer-icon.png");
+	opacity: 0.7;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.comment .menu .like:hover
+{
+	opacity: 1;
+}
+.comment .menu .answer:hover
+{
+	opacity: 1;
+}
+.replies_container .close_icon:hover
+{
+	opacity: 1;
+}
+.comments_container .comments_list .comment:last-child
+{
+	margin-bottom: 20px;
+	border-radius: 0 0 5px 15px;
+}
+.comment .description
+{
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	text-align: justify;
+	max-width: 70%;
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 2%;
+	margin-bottom: 5%;
+}
+.comment .author .name
+{
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	text-align: center;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.replies_container .heading:hover
+{
+	opacity: 1;
+}
+.comment .author .avatar
+{
+	height: 100px;
+	width: 100%;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	/*+placement:float-left 0px 0px;*/
+	float: left;
+	position: relative;
+	left: 0px;
+	top: 0px;
+}

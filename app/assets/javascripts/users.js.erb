@@ -1,0 +1,244 @@
+$(document).ready(function () {
+    $("#profile_toggler").live("click", function () {
+        window.history.pushState({type:"user", id:Main.user.id}, "", "/users/" + Main.user.id);
+        User.get(Main.user.id);
+    });
+
+    $(".avatar .profile_menu_toggler").live("click", function () {
+        $(this).toggleClass("selected");
+        User.Avatar.Form.show();
+    });
+
+    $(".description .profile_menu_toggler").live("click", function () {
+        $(this).toggleClass("selected");
+        User.Description.Form.show();
+    });
+
+    $(".befriend.button").live("click", function () {
+        User.toggle_friendship(Main.user_tmp.attributes.id);
+    });
+
+    $(".user_trigger").live("mousedown", function (e) {
+        //alert(e.which);
+        // handle mouse event
+        switch (e.which) {
+            case 1:
+                // left button. go to page directly
+                window.history.pushState({type:"user", id:$(this).attr("user-id")}, "", "/users/" + $(this).attr("user-id"));
+                User.get($(this).attr("user-id"));
+                break;
+            case 2:
+                // middle button. open in new tab.
+                // window.open("/news_entries/" + $(this).attr("entry-id"),'_blank');
+                break;
+            case 3:
+                // right button. for admin use.
+                // console.log("admin");
+                break;
+        }
+    });
+});
+User = {
+    get:function (id) {
+        // nuke the flash object
+        $(".plupload").remove();
+        $.ajax({
+            type:"GET",
+            url:"/users/" + id,
+            success:function (msg) {
+                Main.user_tmp = new user(msg.user);
+                User.render();
+            },
+            error:function (request, status, error) {
+                x_alert(request.responseText);
+            }
+        });
+    },
+    render:function () {
+        // nuke the flash object
+        $(".plupload").remove();
+        $(".container").empty();
+        $("#profile_template").tmpl({user:Main.user_tmp}).appendTo(".container");
+
+        if (Main.user_tmp.attributes.relation == "self") {
+            // for current user initialize menu items
+            $(".user_info .photo .avatar").append("<div class='profile_menu_toggler' title='Редактировать'></div>");
+            $(".user_info .description").append("<div class='profile_menu_toggler' title='Редактировать'></div>");
+            // initialize form templates
+            User.Avatar.Form.init();
+            User.Description.Form.init();
+            // fill description with the values you already have
+            $.each(Main.user_tmp.attributes.description, function (index, value) {
+                console.log(index);
+                console.log(value[1]);
+                $("#item_" + index).val(value[1]);
+            });
+        }
+
+        var user_images_update_fired = false;
+        $(".photo .list").scroll(function () {
+            //console.log(window.history.state);
+            // we are in the right place
+            h = scrollBottom($(".photo .list"));
+            //console.log(h);
+            if (h < 20) {
+                //get new entries
+                if (!user_images_update_fired) {
+                    // user id is stored in browser history
+                    User.Images.get_next();
+                    user_images_update_fired = true;
+                }
+            } else {
+                user_images_update_fired = false;
+            }
+        });
+        Photo.Images.finished = false;
+        Photo.Images.offset = 0;
+        User.Images.get_next();
+    },
+    set_avatar:function (avatar_id) {
+        User.Avatar.Form.Spinner.show();
+        $.ajax({
+            type:"PUT",
+            url:"/set_avatar",
+            data:{avatar_id:avatar_id},
+            success:function (msg) {
+                Main.user_tmp.attributes.avatar = msg.avatar;
+                User.render();
+            },
+            error:function (request, status, error) {
+                x_alert(request.responseText);
+            }
+        });
+    },
+    toggle_friendship:function (id) {
+        $.ajax({
+            type:"PUT",
+            url:"/toggle_friendship",
+            data:{user_id:id},
+            success:function (msg) {
+                Main.user_tmp.attributes.relation = msg.relation;
+                User.render();
+            },
+            error:function (request, status, error) {
+                x_alert(request.responseText);
+            }
+        });
+    },
+    Avatar:{
+        Form:{
+            init:function () {
+                $("#avatar_form_container").remove();
+                // get avatar album
+                $.ajax({
+                    type:"GET",
+                    url:"/avatars/" + Main.user_tmp.attributes.id,
+                    success:function (msg) {
+                        Main.user_tmp.avatar_album = new albumx(msg.album);
+                        $("#avatar_form_template").tmpl({album:Main.user_tmp.avatar_album}).appendTo(".container");
+                        $("#avatar_form_container").draggable({
+                            stop:function (event, ui) {
+                                // reposition plupload flash object
+                                Photo.Plupload.self.refresh();
+                            },
+                            handle:"h4"
+                        });
+                        Photo.init_dragging();
+                    },
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                    }
+                });
+            },
+            show:function () {
+                $("#avatar_form_container").show();
+                Photo.Album.Form.init(Main.user_tmp.avatar_album.attributes.id);
+            },
+            hide:function () {
+                // nuke the flash object
+                $(".plupload").remove();
+                $("#avatar_form_container").hide();
+            },
+            Spinner:{
+                show:function () {
+                    $("#avatar_form_container .glass").show();
+                },
+                hide:function () {
+                    $("#avatar_form_container .glass").hide();
+                }
+            }
+        }
+    },
+    Images:{
+        get_next:function () {
+            if (!Photo.Images.finished) {
+                $.ajax({
+                    type:"GET",
+                    url:"/images",
+                    data:{offset:Photo.Images.offset, user_id:Main.user_tmp.attributes.id},
+                    success:function (msg) {
+                        if (msg.images.length != 0) {
+                            Main.user_tmp.PhotoList.add(msg.images);
+                            Photo.Images.offset = msg.offset;
+                            User.Images.render();
+                        } else {
+                            // all images loaded
+                            Photo.Images.finished = true;
+                        }
+                    },
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                    }
+                });
+            }
+        },
+        render:function () {
+            $(".photo .list").empty();
+            $.each(Main.user_tmp.PhotoList.models, function (index, value) {
+                $("#image_thumb_template").tmpl({value:value}).appendTo(".photo .list");
+            });
+        }
+    },
+    Description:{
+        Form:{
+            show:function () {
+                $("#description_form_container").show();
+            },
+            hide:function () {
+                $("#description_form_container").hide();
+            },
+            init:function () {
+                $("#description_form_container").remove();
+                // get avatar album
+                $("#description_form_template").tmpl({description:Main.user_tmp.attributes.description}).appendTo(".container");
+                $("#description_form_container").draggable();
+            },
+            post:function () {
+                User.Description.Form.Spinner.show();
+                $.ajax({
+                    type:"PUT",
+                    url:"/set_description",
+                    data:$("#description_form").serialize(),
+                    error:function (request, status, error) {
+                        x_alert(request.responseText);
+                        User.Description.Form.Spinner.hide();
+                        //tinyMCE.activeEditor.setContent("");
+                    },
+                    success:function (msg) {
+                        // update values and reset everything
+                        Main.user_tmp.attributes.description = msg.description;
+                        User.render();
+                    }
+                });
+            },
+            Spinner:{
+                show:function () {
+                    $("#description_form_container .glass").show();
+                },
+                hide:function () {
+                    $("#description_form_container .glass").hide();
+                }
+            }
+        }
+    }
+}

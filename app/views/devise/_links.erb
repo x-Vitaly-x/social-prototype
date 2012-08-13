@@ -1,0 +1,23 @@
+<%- if controller_name != 'sessions' %>
+  <%= link_to raw("<li><span>Sign in</span></li>"), new_session_path(resource_name) %>
+<% end -%>
+
+<%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+  <%= link_to raw("<li class='first'><span>Sign up</span></li>"), new_registration_path(resource_name) %>
+<% end -%>
+
+<%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+    <%= link_to raw("<li><span>Forgot password?</span></li>"), new_password_path(resource_name) %>
+<% end -%>
+
+<%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <%= link_to raw("<li><span>No message?</span></li>"), new_confirmation_path(resource_name) %>
+<% end -%>
+
+<%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+    <%= link_to raw("<li><span>Can't login'?</span></li>"), new_unlock_path(resource_name) %>
+<% end -%>
+
+<a href="/map_entries">
+  <li><span>View Events</span></li>
+</a>
